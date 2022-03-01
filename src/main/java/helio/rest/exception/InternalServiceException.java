@@ -2,16 +2,16 @@ package helio.rest.exception;
 
 import org.apache.http.protocol.HTTP;
 
-import helio.rest.model.ApiError;
 import spark.ExceptionHandler;
 import spark.Request;
+import helio.rest.model.ApiError;
 import spark.Response;
 
-public class RepositoryException extends RuntimeException {
+public class InternalServiceException extends RuntimeException {
 
 	private static final long serialVersionUID = -7982702000551927171L;
 
-	public RepositoryException(String msg) {
+	public InternalServiceException(String msg) {
 		super(msg);
 	}
 

@@ -2,18 +2,31 @@ package helio.rest.model;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.Transient;
+import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.gson.annotations.Expose;
 
 import helio.Helio;
+import helio.blueprints.exceptions.ExtensionNotFoundException;
+import helio.blueprints.exceptions.IncompatibleMappingException;
+import helio.blueprints.exceptions.IncorrectMappingException;
+import helio.blueprints.mappings.Mapping;
+import helio.exceptions.ConfigurationException;
 import helio.rest.RestUtils;
+import helio.rest.model.configuration.EndpointSparqlConfiguration;
+import helio.rest.model.configuration.HelioTranslationConfiguration;
+import sparql.streamline.exception.SparqlConfigurationException;
 
 @Entity
+@JsonIgnoreProperties(value = { "mappingContent", "mappingReader" })
 public class HelioTask {
 
 	@Id
@@ -30,12 +43,33 @@ public class HelioTask {
 
 	private String mappingReader;
 
-	@Transient
-	private Helio helio;
+	@Expose
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "endpoint_configuration_id", unique = true)
+	private EndpointSparqlConfiguration endpoint;
+	@Expose
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "translation_configuration_id", unique = true)
+	private HelioTranslationConfiguration configuration;
+
+	private boolean isActive = true;
 
 	public HelioTask() {
-		super();
+
 	}
+
+	public Helio asemble() throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException, SparqlConfigurationException, ConfigurationException {
+
+		Mapping mapping =  ModelUtils.readMapping(mappingContent, mappingReader);
+		// Create helio tasks
+		Helio helio = new Helio();
+		helio.setSparqlEndpointConfiguration(endpoint.transform());
+		helio.setConfiguration(configuration.transform());
+		helio.createFrom(mapping);
+		return helio;
+	}
+
+
 
 	public String getId() {
 		return id;
@@ -51,6 +85,22 @@ public class HelioTask {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public EndpointSparqlConfiguration getEndpoint() {
+		return endpoint;
+	}
+
+	public void setEndpoint(EndpointSparqlConfiguration endpoint) {
+		this.endpoint = endpoint;
+	}
+
+	public HelioTranslationConfiguration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(HelioTranslationConfiguration configuration) {
+		this.configuration = configuration;
 	}
 
 	public String getDescription() {
@@ -77,12 +127,13 @@ public class HelioTask {
 		this.mappingReader = mappingReader;
 	}
 
-	public Helio getHelio() {
-		return helio;
+
+	public boolean isActive() {
+		return isActive;
 	}
 
-	public void setHelio(Helio helio) {
-		this.helio = helio;
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	@Override
@@ -104,6 +155,7 @@ public class HelioTask {
 	public String toString() {
 		return RestUtils.toJson(this);
 	}
+
 
 
 

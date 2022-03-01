@@ -1,51 +1,63 @@
 package helio.rest.controller;
 
+import java.util.UUID;
+
+import org.apache.http.HttpHeaders;
+import org.eclipse.jetty.http.MimeTypes;
+import spark.Request;
 import helio.rest.RestUtils;
+import helio.rest.exception.InvalidRequestException;
 import helio.rest.model.HelioTask;
 import helio.rest.service.HelioTaskService;
-import spark.Request;
 import spark.Response;
 import spark.Route;
 
 public class HelioTaskController {
 
 	public static final Route list = (Request request, Response response) -> {
+		response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
 		return HelioTaskService.listHelio();
 	};
-	
+
 	public static final Route get = (Request request, Response response) -> {
 		String id = fetchId(request);
+		response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
 		return HelioTaskService.getHelio(id); // throws exception if not found
 	};
-	
+
 	public static final Route create = (Request request, Response response) -> {
+		response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
+
 		String body = request.body();
 		if(body==null || body.isBlank())
-			throw new IllegalArgumentException("Missing Helio task information, send a Json with the keys: \"id\" (mandatory), \"name\" (optional), \"description\" (optional).");
+			throw new InvalidRequestException("Missing Helio task information, send a Json with the keys: \"id\" (mandatory), \"name\" (optional), \"description\" (optional).");
 
-		HelioTask task = RestUtils.getGSON().fromJson(body, HelioTask.class);
+		HelioTask task = (HelioTask) RestUtils.fromJson(body, HelioTask.class);
+		if(task.getId()==null)
+			task.setId(UUID.randomUUID().toString());
+
 		HelioTaskService.createHelio(task);
 		response.status(201);
-		
+
 		return task;
 	};
-	
+
 	public static final Route delete = (Request request, Response response) -> {
 		String id = fetchId(request);
-		
+
 		HelioTaskService.deleteHelio(id);
-		
+
 		response.status(204);
 		response.body("");
 		return "";
 	};
-	
-	
+
+
 	protected static final String fetchId(Request request) {
 		String id = request.params("id");
 		if(id==null || id.isEmpty())
-			throw new IllegalArgumentException("Missing valid Helio task id");
+			throw new InvalidRequestException("Missing valid Helio task id");
 		return id;
 	}
-	
+
 }
