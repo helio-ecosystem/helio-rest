@@ -96,7 +96,7 @@ public class RestUtils {
 	protected static void registerComponents() {
 		HelioComponentService.list().parallelStream().forEach(helioComponent -> {
 			try {
-				Components.registerAndLoad(helioComponent.getComponent());
+				Components.registerAndLoad(helioComponent.asComponent());
 			} catch (ExtensionNotFoundException e) {
 				System.out.println(e.toString());
 			}
