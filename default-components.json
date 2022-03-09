@@ -1,10 +1,19 @@
 [
+	{
+    "source":"/Users/andreacimmino/Desktop/helio-handler-csv-0.0.2.jar",
+		"clazz":"handlers.CsvHandler",
+		"type":"PROVIDER"
+		},
 	{ 
+		"source" : null,
+		"clazz" : "helio.rest.controller.component.RoutePostComponent",
+		"type" : "PROVIDER"
+	},{ 
 		"source" : null,
 		"clazz" : "helio.components.readers.JsonReader",
 		"type" : "READER"
 	},{ 
-		"source" : "https://github.com/helio-ecosystem/helio-reader-rml/releases/download/v0.0.4/helio-reader-rml-0.0.4.jar", 
+		"source" : "https://github.com/helio-ecosystem/helio-reader-rml/releases/download/v0.0.5/helio-reader-rml-0.0.5.jar", 
 		"clazz" : "readers.RmlReader",
 		"type" : "READER"
 	},{

@@ -26,7 +26,7 @@ public class HelioConfigurationController{
 		String body = request.body();
 		if(body==null || body.isBlank())
 			throw new InvalidRequestException("Missing configuration information, send a valid Json.");
-
+		// re-load the in-memory translation tasks
 		HelioRestConfiguration conf = (HelioRestConfiguration) RestUtils.fromJson(body, HelioRestConfiguration.class);
 		return RestUtils.toJson(HelioConfigurationService.updateSingleton(conf));
 	};

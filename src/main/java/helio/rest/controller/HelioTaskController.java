@@ -31,7 +31,7 @@ public class HelioTaskController {
 		String body = request.body();
 		if(body==null || body.isBlank())
 			throw new InvalidRequestException("Missing Helio task information, send a Json with the keys: \"id\" (mandatory), \"name\" (optional), \"description\" (optional).");
-
+		// Do not create again the default configuration, reuse the existing one instead
 		HelioTask task = (HelioTask) RestUtils.fromJson(body, HelioTask.class);
 		if(task.getId()==null)
 			task.setId(UUID.randomUUID().toString());

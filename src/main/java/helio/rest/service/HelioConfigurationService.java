@@ -17,12 +17,14 @@ public class HelioConfigurationService {
 	private static final String SINGLETON_CONFIGURATION_ID_SPARQL = "singleton-id-sparql";
 	private static final String SINGLETON_CONFIGURATION_ID_TRANSLATION = "singleton-id-translation";
 
+	public static boolean existsSingleton() {
+		return repository.exists(SINGLETON_CONFIGURATION_ID);
+	}
 
 	public static HelioRestConfiguration getSingleton() {
 		Optional<HelioRestConfiguration> opt = repository.retrieve(SINGLETON_CONFIGURATION_ID);
 		if(!opt.isPresent())
 			throw new ResourceNotPresentException("Requested configuration not found");
-		HelioRestConfiguration s = opt.get();
 		return opt.get();
 	}
 

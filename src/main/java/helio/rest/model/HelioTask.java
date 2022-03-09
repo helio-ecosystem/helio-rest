@@ -45,11 +45,11 @@ public class HelioTask {
 
 	@Expose
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "endpoint_configuration_id", unique = true)
+	@JoinColumn(name = "endpoint_configuration_id", unique = false)
 	private EndpointSparqlConfiguration endpoint;
 	@Expose
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "translation_configuration_id", unique = true)
+	@JoinColumn(name = "translation_configuration_id", unique = false)
 	private HelioTranslationConfiguration configuration;
 
 	private boolean isActive = true;
@@ -61,11 +61,13 @@ public class HelioTask {
 	public Helio asemble() throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException, SparqlConfigurationException, ConfigurationException {
 
 		Mapping mapping =  ModelUtils.readMapping(mappingContent, mappingReader);
+		if(mapping==null)
+			throw new IncorrectMappingException("Provided mapping can not be parsed, check for syntax errors or missing components (Readers) for parsing it");
 		// Create helio tasks
 		Helio helio = new Helio();
 		helio.setSparqlEndpointConfiguration(endpoint.transform());
 		helio.setConfiguration(configuration.transform());
-		helio.createFrom(mapping);
+		helio.addMapping(mapping);
 		return helio;
 	}
 

@@ -3,12 +3,15 @@ package helio.rest.model;
 import helio.Mappings;
 import helio.blueprints.Components;
 import helio.blueprints.components.MappingReader;
+import helio.blueprints.exceptions.ExtensionNotFoundException;
+import helio.blueprints.exceptions.IncompatibleMappingException;
+import helio.blueprints.exceptions.IncorrectMappingException;
 import helio.blueprints.mappings.Mapping;
 import helio.rest.exception.InvalidRequestException;
 
 class ModelUtils {
 
-	protected static Mapping readMapping(String rawMapping, String reader)throws InvalidRequestException {
+	protected static Mapping readMapping(String rawMapping, String reader)throws InvalidRequestException, IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException {
 		Mapping mapping = new Mapping();
 		if (reader == null) {
 			mapping = Mappings.readMapping(rawMapping);

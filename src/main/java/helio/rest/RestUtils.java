@@ -18,7 +18,9 @@ import helio.blueprints.Components;
 import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.model.HelioComponent;
+import helio.rest.model.configuration.HelioRestConfiguration;
 import helio.rest.service.HelioComponentService;
+import helio.rest.service.HelioConfigurationService;
 import helio.rest.service.HelioTaskService;
 
 public class RestUtils {
@@ -56,10 +58,16 @@ public class RestUtils {
 
 	public static Map<String, Helio> currentTasks = new HashMap<>();
 	public static void initTasks(){
+		HelioRestConfiguration conf = HelioConfigurationService.getSingleton();
 		HelioTaskService.listHelio().parallelStream().forEach(hTask -> {
 			try {
-				if(hTask.getMappingContent()!=null && !hTask.getMappingContent().isBlank() && hTask.isActive() )
+				if(hTask.getMappingContent()!=null && !hTask.getMappingContent().isBlank() && hTask.isActive() ) {
+					if(hTask.getConfiguration()==null)
+						hTask.setConfiguration(conf.getTranslationConfiguration());
+					if(hTask.getEndpoint()== null)
+						hTask.setEndpoint(conf.getEndpointConfiguration());
 					currentTasks.put(hTask.getId(), hTask.asemble());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

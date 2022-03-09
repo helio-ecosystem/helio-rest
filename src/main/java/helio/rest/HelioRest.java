@@ -15,6 +15,7 @@ import helio.rest.controller.HelioConfigurationController;
 import helio.rest.controller.HelioDataController;
 import helio.rest.controller.HelioMappingController;
 import helio.rest.controller.HelioTaskController;
+import helio.rest.controller.component.RoutePostComponent;
 import helio.rest.exception.Exceptions;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.exception.InvalidRequestException;
@@ -28,7 +29,6 @@ import helio.rest.spark.OptionsController;
 public class HelioRest {
 
 
-	public static final String APP_PACKAGE = "helio.rest";
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
@@ -43,7 +43,7 @@ public class HelioRest {
 		// List routes
         before(new CorsFilter());
         new OptionsController();
-
+        
         path("/helio", () -> {
         	// translation tasks CRUD
 	        get("/", HelioTaskController.list);
@@ -60,11 +60,11 @@ public class HelioRest {
 	        put("", HelioDataController.runTasks);
 	        //post("/data", HelioDataController.getData);
 
-	        // TODO:  post("/:id/generate", DataGenerationController.generateData);
-	       // TODO: post("/:id/data", DataGenerationController.getData);
-	       // TODO: ? post("/sparql", DataGenerationController.getData);
-
-
+	        
+	        // TODO: ? post("/sparql", DataGenerationController.getData);
+	        
+	        // TODO: add endpoint for reading resources, add @context to translation task
+	        // TODO: if the context is present and not mime, then json-ld 1.1
         });
 
         path("/component", () -> {
@@ -85,7 +85,7 @@ public class HelioRest {
 		     put("", HelioConfigurationController.restoreSingleton);
 		     put("/", HelioConfigurationController.restoreSingleton);
 	       });
-
+        post("/test", new RoutePostComponent());
         // Exceptions
         exception(InternalServiceException.class, InternalServiceException.handle);
         exception(ResourceNotPresentException.class, ResourceNotPresentException.handle);
