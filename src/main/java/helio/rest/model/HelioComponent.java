@@ -40,7 +40,7 @@ public class HelioComponent {
 		this.id = String.valueOf(Utils.concatenate(this.source, this.clazz, this.type.toString()).hashCode()).replace('-', '0');
 	}
 
-	public Component getComponent() {
+	public Component asComponent() {
 		return new Component(source, clazz, type);
 	}
 
@@ -75,5 +75,28 @@ public class HelioComponent {
 		return Objects.equals(id, other.id);
 	}
 
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(String clazz) {
+		this.clazz = clazz;
+	}
+
+	public ComponentType getType() {
+		return type;
+	}
+
+	public void setType(ComponentType type) {
+		this.type = type;
+	}
 
 }

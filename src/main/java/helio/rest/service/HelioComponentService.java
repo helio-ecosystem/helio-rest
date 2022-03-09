@@ -20,7 +20,7 @@ public class HelioComponentService {
 			throw new InvalidRequestException("The component provided already already exists");
 		try {
 			//** Helio **//
-			Components.registerAndLoad(component.getComponent());
+			Components.registerAndLoad(component.asComponent());
 			// Persistence
 			repository.persist(component);
 		} catch (ExtensionNotFoundException e) {
@@ -45,7 +45,7 @@ public class HelioComponentService {
 	public static void delete(String id) {
 		HelioComponent hComponent = get(id); // throw exception if not found
 		repository.delete(hComponent.getId());
-		Components.getRegistered().remove(hComponent.getComponent());
+		Components.getRegistered().remove(hComponent.asComponent());
 
 	}
 }
