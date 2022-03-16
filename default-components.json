@@ -1,9 +1,9 @@
 [
 	{
-    "source":"/Users/andreacimmino/Desktop/helio-handler-csv-0.0.2.jar",
+    	"source":"/Users/andreacimmino/Desktop/helio-handler-csv-0.0.3.jar",
 		"clazz":"handlers.CsvHandler",
-		"type":"PROVIDER"
-		},
+		"type":"HANDLER"
+	},
 	{ 
 		"source" : null,
 		"clazz" : "helio.rest.controller.component.RoutePostComponent",
