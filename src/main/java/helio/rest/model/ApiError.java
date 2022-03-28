@@ -2,7 +2,7 @@ package helio.rest.model;
 
 import com.google.gson.annotations.Expose;
 
-import helio.rest.RestUtils;
+import helio.rest.HelioService;
 
 public class ApiError {
 
@@ -39,6 +39,6 @@ public class ApiError {
 
 	@Override
 	public String toString() {
-		return RestUtils.toJson(this);
+		return HelioService.toJson(this);
 	}
 }

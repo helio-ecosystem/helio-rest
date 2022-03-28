@@ -1,36 +1,27 @@
 [
-	{
-    	"source":"/Users/andreacimmino/Desktop/helio-handler-csv-0.0.3.jar",
-		"clazz":"handlers.CsvHandler",
-		"type":"HANDLER"
-	},
-	{ 
-		"source" : null,
-		"clazz" : "helio.rest.controller.component.RoutePostComponent",
-		"type" : "PROVIDER"
-	},{ 
-		"source" : null,
-		"clazz" : "helio.components.readers.JsonReader",
-		"type" : "READER"
-	},{ 
-		"source" : "https://github.com/helio-ecosystem/helio-reader-rml/releases/download/v0.0.5/helio-reader-rml-0.0.5.jar", 
-		"clazz" : "readers.RmlReader",
-		"type" : "READER"
-	},{
-		"source" : "https://github.com/helio-ecosystem/helio-handler-jayway/releases/download/v0.0.2/helio-handler-jayway-0.0.2.jar",
-		"clazz" : "handlers.JsonHandler",
-		"type" : "HANDLER"
-	},{
-		"source" : "https://github.com/helio-ecosystem/helio-provider-url/releases/download/v0.0.1/helio-provider-url-0.0.1.jar",
-		"clazz" : "provider.URLProvider",
-		"type" : "PROVIDER"
-	},{
-		"source" : "https://github.com/helio-ecosystem/helio-provider-file/releases/download/v.0.0.1/helio-provider-file-0.0.1.jar",  
-		"clazz" : "providers.FileProvider",
-		"type" : "PROVIDER"
-	},{
-		"source" : null,
-		"clazz" : "helio.components.functions.HF",
-		"type" : "FUNCTION"
-	}
+  {
+    "source": "https://github.com/helio-ecosystem/helio-handler-jayway/releases/download/v0.0.2/helio-handler-jayway-0.0.2.jar",
+    "clazz": "handlers.JsonHandler",
+    "type": "HANDLER"
+  },
+  {
+    "source": "https://github.com/helio-ecosystem/helio-provider-url/releases/download/v0.0.1/helio-provider-url-0.0.1.jar",
+    "clazz": "provider.URLProvider",
+    "type": "PROVIDER"
+  },
+  {
+    "source": "https://github.com/helio-ecosystem/helio-provider-file/releases/download/v.0.0.1/helio-provider-file-0.0.1.jar",
+    "clazz": "providers.FileProvider",
+    "type": "PROVIDER"
+  },
+  {
+    "source": "https://github.com/helio-ecosystem/helio-processor-jmapping/releases/download/v0.2.0/helio-processor-jmapping-0.2.0.jar",
+    "clazz": "helio.jmapping.processor.JMappingProcessor",
+    "type": "PROCESSOR"
+  },
+  {
+    "source": "https://github.com/helio-ecosystem/helio-processor-jmapping/releases/download/v0.2.0/helio-processor-jmapping-0.2.0.jar",
+    "clazz": "helio.jmapping.functions.HF",
+    "type": "FUNCTION"
+  }
 ]

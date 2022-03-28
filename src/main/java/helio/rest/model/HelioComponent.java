@@ -2,54 +2,33 @@ package helio.rest.model;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
-import com.google.gson.annotations.Expose;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
-import helio.Utils;
 import helio.blueprints.Component;
-import helio.blueprints.ComponentType;
+import helio.rest.HelioService;
 
 @Entity
 public class HelioComponent {
 
 	@Id
-	@Expose
 	private String id;
-	@Expose
-	private String source;
-	@Expose
-	private String clazz;
-	@Expose
-	private ComponentType type;
-
+	@Column( name = "component", columnDefinition="BLOB NOT NULL")
+	@Lob
+	private String component;
+	
 	public HelioComponent() {
 		super();
 	}
 
 	public HelioComponent(Component component) {
-
-		this.source = component.getSource();
-		this.clazz = component.getClazz();
-		this.type = component.getType();
-		this.id = String.valueOf(Utils.concatenate(this.source, this.clazz, this.type.toString()).hashCode()).replace('-', '0');
-	}
-
-	public void setId() {
-		this.id = String.valueOf(Utils.concatenate(this.source, this.clazz, this.type.toString()).hashCode()).replace('-', '0');
-	}
-
-	public Component asComponent() {
-		return new Component(source, clazz, type);
-	}
-
-	public boolean equivalent(Component component) {
-		boolean equivalent = (this.source==null && component.getSource()==null)
-				|| (this.source!=null && component.getSource()!=null && this.source.equals(component.getSource())) ;
-		equivalent &= (this.clazz!=null && component.getClazz()!=null && this.clazz.equals(component.getClazz()));
-		equivalent &= (this.type!=null && component.getType()!=null && this.type.equals(component.getType()));
-		return equivalent;
+		this.component = HelioService.toJson(component);
+		this.id = String.valueOf(this.component.hashCode());
 	}
 
 	public String getId() {
@@ -57,46 +36,40 @@ public class HelioComponent {
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.id = String.valueOf(this.component.hashCode());
+	}
+
+	public Component getComponent() throws JsonMappingException, JsonProcessingException {
+		return HelioService.MAPPER.readValue(this.component, Component.class);
+	}
+
+	public void setComponent(Component component) {
+		this.component = HelioService.toJson(component);
+		setId(""); 
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(component, id);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if ((obj == null) || (getClass() != obj.getClass()))
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
 			return false;
 		HelioComponent other = (HelioComponent) obj;
-		return Objects.equals(id, other.id);
+		return Objects.equals(component, other.component) && id == other.id;
 	}
 
-	public String getSource() {
-		return source;
+	@Override
+	public String toString() {
+		return this.component;
 	}
 
-	public void setSource(String source) {
-		this.source = source;
-	}
-
-	public String getClazz() {
-		return clazz;
-	}
-
-	public void setClazz(String clazz) {
-		this.clazz = clazz;
-	}
-
-	public ComponentType getType() {
-		return type;
-	}
-
-	public void setType(ComponentType type) {
-		this.type = type;
-	}
+	
 
 }

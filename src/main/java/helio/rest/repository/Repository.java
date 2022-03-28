@@ -33,7 +33,7 @@ public class Repository<T> {
 		Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
             transaction = session.beginTransaction();
-            session.save(object);
+            session.persist(object);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
@@ -46,7 +46,7 @@ public class Repository<T> {
 	public boolean exists(String id) {
 		return exists(id, "id");
 	}
-
+	
 	public boolean exists(String id, String columnName) {
 		try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
 			session.beginTransaction();
@@ -56,8 +56,7 @@ public class Repository<T> {
         	throw new InternalServiceException(e.toString());
         }
 	}
-
-
+	
 	public Optional<T> retrieve(String id) {
 		try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
 			session.beginTransaction();
@@ -77,6 +76,15 @@ public class Repository<T> {
 	}
 
 	public void delete(String id) {
+		try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
+			session.beginTransaction();
+			session.createQuery(queryDelete).setParameter("id", id).executeUpdate();
+		} catch (Exception e) {
+			throw new InternalServiceException(e.toString());
+        }
+	}
+	
+	public void delete(int id) {
 		try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
 			session.beginTransaction();
 			session.createQuery(queryDelete).setParameter("id", id).executeUpdate();

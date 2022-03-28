@@ -10,17 +10,17 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.put;
 
-import helio.rest.controller.HelioComponentController;
-import helio.rest.controller.HelioConfigurationController;
+import helio.rest.controller.ComponentController;
+import helio.rest.controller.ConfigurationController;
 import helio.rest.controller.HelioDataController;
 import helio.rest.controller.HelioMappingController;
-import helio.rest.controller.HelioTaskController;
+import helio.rest.controller.TranslationTaskController;
 import helio.rest.controller.component.RoutePostComponent;
 import helio.rest.exception.Exceptions;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.exception.InvalidRequestException;
 import helio.rest.exception.ResourceNotPresentException;
-import helio.rest.model.configuration.HelioRestConfiguration;
+import helio.rest.model.configuration.ServiceConfiguration;
 import helio.rest.service.HelioConfigurationService;
 import helio.rest.spark.CorsFilter;
 import helio.rest.spark.OptionsController;
@@ -28,7 +28,10 @@ import helio.rest.spark.OptionsController;
 
 public class HelioRest {
 
-
+	// -- Attributes
+	public static ServiceConfiguration serviceConfiguration =null;
+	public static final String DEFAULT_MAPPING_PROCESSOR = "JMappingProcessor";
+	// -- Main
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
@@ -36,9 +39,9 @@ public class HelioRest {
 		configure();
 		// The following methods need to be ran in the order
         // they are currently written
-        RestUtils.loadDefaultComponents();
-        RestUtils.registerComponents();
-        RestUtils.initTasks();
+        HelioService.loadDefaultComponents();
+        HelioService.registerComponents();
+        HelioService.initTasks();
 
 		// List routes
         before(new CorsFilter());
@@ -46,18 +49,22 @@ public class HelioRest {
         
         path("/helio", () -> {
         	// translation tasks CRUD
-	        get("/", HelioTaskController.list);
-	        get("", HelioTaskController.list);
-	        post("", HelioTaskController.create);
-	        post("/", HelioTaskController.create);
-	        get("/:id", HelioTaskController.get);
-	        delete("/:id", HelioTaskController.delete);
+	        get("/", TranslationTaskController.list);
+	        get("", TranslationTaskController.list);
+	        post("", TranslationTaskController.create);
+	        post("/", TranslationTaskController.create);
+	        get("/:id", TranslationTaskController.get);
+	        delete("/:id", TranslationTaskController.delete);
 	        // Mapping CRUD
 	        get("/:id/mapping", HelioMappingController.getMapping);
 	        post("/:id/mapping", HelioMappingController.addUpdateMapping);
 	        delete("/:id/mapping", HelioMappingController.removeMapping);
 	        // Data generation (synchronous) & data associated retrieval
 	        put("", HelioDataController.runTasks);
+	        put(":/id", HelioDataController.runTask);
+	        //TODO:  put("/:id/:unitId", HelioDataController.runTaskUnit);
+	        
+	        
 	        //post("/data", HelioDataController.getData);
 
 	        
@@ -68,22 +75,23 @@ public class HelioRest {
         });
 
         path("/component", () -> {
-        	get("/", HelioComponentController.list);
-	        get("", HelioComponentController.list);
-	        delete("", HelioComponentController.restore);
-	        post("", HelioComponentController.create);
-	        post("/", HelioComponentController.create);
-	        get("/:id", HelioComponentController.get);
-	        delete("/:id", HelioComponentController.delete);
+        	get("/", ComponentController.list);
+	        get("", ComponentController.list);
+	        delete("", ComponentController.restore);
+	        post("", ComponentController.create);
+	        post("/", ComponentController.create);
+	        get("/:id", ComponentController.get);
+	        delete("/:id", ComponentController.delete);
         });
+        get("/processors", HelioMappingController.listProcessors);
 
         path("/configuration", () -> {
-	         get("/", HelioConfigurationController.getSingleton);
-	         get("", HelioConfigurationController.getSingleton);
-		     post("", HelioConfigurationController.updateSingleton);
-		     post("/", HelioConfigurationController.updateSingleton);
-		     put("", HelioConfigurationController.restoreSingleton);
-		     put("/", HelioConfigurationController.restoreSingleton);
+	         get("/", ConfigurationController.getSingleton);
+	         get("", ConfigurationController.getSingleton);
+		     post("", ConfigurationController.updateSingleton);
+		     post("/", ConfigurationController.updateSingleton);
+		     put("", ConfigurationController.restoreSingleton);
+		     put("/", ConfigurationController.restoreSingleton);
 	       });
         post("/test", new RoutePostComponent());
         // Exceptions
@@ -98,8 +106,9 @@ public class HelioRest {
 	}
 
 	private static void configure() {
-		HelioRestConfiguration configuration = HelioConfigurationService.createDefault(false);
-		port(configuration.getPort());
+		if(serviceConfiguration == null)
+			serviceConfiguration = HelioConfigurationService.createDefault(false);
 		// TODO:ADD OTHER PARAMETERS
+		port(serviceConfiguration.getPort());
 	}
 }

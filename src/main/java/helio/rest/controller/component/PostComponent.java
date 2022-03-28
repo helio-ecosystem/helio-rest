@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import com.google.gson.JsonObject;
 
 import helio.blueprints.components.AsyncDataProvider;
-import helio.blueprints.mappings.TranslationUnit;
+import helio.blueprints.objects.TranslationUnit;
 
 public class PostComponent implements AsyncDataProvider  {
 

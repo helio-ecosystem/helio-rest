@@ -3,28 +3,24 @@ package helio.rest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import helio.Helio;
 import helio.blueprints.Component;
 import helio.blueprints.Components;
-import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.model.HelioComponent;
-import helio.rest.model.configuration.HelioRestConfiguration;
+import helio.rest.model.HelioTranslationTask;
 import helio.rest.service.HelioComponentService;
-import helio.rest.service.HelioConfigurationService;
 import helio.rest.service.HelioTaskService;
 
-public class RestUtils {
+public class HelioService {
 
+	
 	// -- Serialization methods
 
 	public static final ObjectMapper MAPPER = new ObjectMapper();
@@ -45,29 +41,14 @@ public class RestUtils {
 		}
 	}
 
-	/*public static final GsonBuilder GSON_BUILDER = new GsonBuilder();
-	public static final String toJson(Object o) {
-		return RestUtils.GSON_BUILDER.excludeFieldsWithoutExposeAnnotation().create().toJsonTree(o).toString();
-	}
-
-	public static final Gson getGSON() {
-		return RestUtils.GSON_BUILDER.excludeFieldsWithoutExposeAnnotation().create();
-	}*/
-
-	// -- translation tasks methods
-
-	public static Map<String, Helio> currentTasks = new HashMap<>();
+	// -- Translation tasks methods
+	public static List<HelioTranslationTask> currentTasks = new CopyOnWriteArrayList<>();
+	
 	public static void initTasks(){
-		HelioRestConfiguration conf = HelioConfigurationService.getSingleton();
-		HelioTaskService.listHelio().parallelStream().forEach(hTask -> {
+		HelioTaskService.listHelioTasks().parallelStream().forEach(hTask -> {
 			try {
-				if(hTask.getMappingContent()!=null && !hTask.getMappingContent().isBlank() && hTask.isActive() ) {
-					if(hTask.getConfiguration()==null)
-						hTask.setConfiguration(conf.getTranslationConfiguration());
-					if(hTask.getEndpoint()== null)
-						hTask.setEndpoint(conf.getEndpointConfiguration());
-					currentTasks.put(hTask.getId(), hTask.asemble());
-				}
+				hTask.asemble();
+				currentTasks.add(hTask);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -77,15 +58,11 @@ public class RestUtils {
 	// -- default components methods
 	public static String defaultComponentsFile = "./default-components.json";
 	public static void loadDefaultComponents() {
-			List<HelioComponent> hComponents = HelioComponentService.list();
 			List<Component> components = readDefaultComponents();
-			for (Component component : components) {
-				Optional<HelioComponent> found =  hComponents.parallelStream()
-						.filter(hcmp -> hcmp.equivalent(component)).findFirst();
-				if(!found.isPresent()) {
-					HelioComponentService.add(new HelioComponent(component));
-				}
-			}
+			components.parallelStream()
+				.map(cmp -> new HelioComponent(cmp))
+				.filter(hCmp -> !HelioComponentService.isStored(hCmp))
+				.forEach(hCmp -> HelioComponentService.add(hCmp));
 	}
 
 	private static List<Component> readDefaultComponents() {
@@ -104,9 +81,12 @@ public class RestUtils {
 	protected static void registerComponents() {
 		HelioComponentService.list().parallelStream().forEach(helioComponent -> {
 			try {
-				Components.registerAndLoad(helioComponent.asComponent());
-			} catch (ExtensionNotFoundException e) {
-				System.out.println(e.toString());
+				
+				
+				Components.registerAndLoad(helioComponent.getComponent());
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(-1);
 			}
 		});
 	}

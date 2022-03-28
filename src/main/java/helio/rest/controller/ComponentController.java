@@ -1,40 +1,44 @@
 package helio.rest.controller;
 
-import java.util.stream.Collectors;
 
+import org.apache.http.HttpHeaders;
+import org.eclipse.jetty.http.MimeTypes;
 
-import helio.rest.RestUtils;
+import helio.blueprints.Component;
+import helio.rest.HelioService;
 import helio.rest.exception.InvalidRequestException;
-import helio.rest.model.HelioComponent;
 import helio.rest.service.HelioComponentService;
 import spark.Response;
 import spark.Request;
 import spark.Route;
 
-public class HelioComponentController {
+public class ComponentController {
 
 
 
 	public static final Route list = (Request request, Response response) -> {
-		return HelioComponentService.list().parallelStream().map(RestUtils::toJson).collect(Collectors.toList());
+		response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
+		return HelioComponentService.list();
 	};
 
 	public static final Route get = (Request request, Response response) -> {
+		response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
 		String id = fetchId(request);
-		return RestUtils.toJson(HelioComponentService.get(id)); // throws exception if not found
+		return HelioService.toJson(HelioComponentService.get(id)); // throws exception if not found
 	};
 
 	public static final Route create = (Request request, Response response) -> {
+		response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
+
 		String body = request.body();
 		if(body==null || body.isBlank())
 			throw new InvalidRequestException("Missing Component information, send a Json with the mandatory keys: \"source\", \"clazz\", \"type\".");
 
-		HelioComponent component = (HelioComponent) RestUtils.fromJson(body, HelioComponent.class);
-		component.setId();
+		Component component = (Component) HelioService.fromJson(body, Component.class);
 		HelioComponentService.add(component);
 		response.status(201);
 
-		return RestUtils.toJson(component);
+		return HelioService.toJson(component);
 	};
 
 	public static final Route delete = (Request request, Response response) -> {
@@ -49,7 +53,7 @@ public class HelioComponentController {
 
 	public static final Route restore = (Request request, Response response) -> {
 		HelioComponentService.list().parallelStream().forEach(cmp -> HelioComponentService.delete(cmp.getId()));
-		RestUtils.loadDefaultComponents();
+		HelioService.loadDefaultComponents();
 		return "";
 	};
 

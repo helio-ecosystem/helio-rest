@@ -10,7 +10,7 @@
         <property name="connection.password"></property>
         
         <!-- JDBC connection pool settings ... using built-in test pool -->
-        <property name="connection.pool_size">1</property>
+        <property name="connection.pool_size">20</property>
         <!-- Select our SQL dialect -->
         <property name="dialect">org.hibernate.dialect.H2Dialect</property>
         <!-- Echo the SQL to stdout -->
@@ -25,11 +25,10 @@
         <property name="hibernate.dbcp.maxIdle">10</property>
         <property name="hibernate.dbcp.minIdle">5</property>
         <property name="hibernate.dbcp.maxWaitMillis">-1</property>
-    	<mapping class="helio.rest.model.HelioTask" />
+    	<mapping class="helio.rest.model.HelioTranslationTask" />
         <mapping class="helio.rest.model.HelioComponent" />
-        <mapping class="helio.rest.model.configuration.EndpointSparqlConfiguration" />
         <mapping class="helio.rest.model.configuration.HelioTranslationConfiguration" />
-        <mapping class="helio.rest.model.configuration.HelioRestConfiguration" />
+        <mapping class="helio.rest.model.configuration.ServiceConfiguration" />
 
 
     </session-factory>
