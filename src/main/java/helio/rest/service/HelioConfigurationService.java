@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import helio.rest.HelioService;
 import helio.rest.exception.ResourceNotPresentException;
-import helio.rest.model.configuration.ServiceConfiguration;
+import helio.rest.model.ServiceConfiguration;
 import helio.rest.repository.Repository;
 import sparql.streamline.core.SparqlEndpointConfiguration;
 
@@ -42,10 +42,6 @@ public class HelioConfigurationService {
 		if(!exists || (exists && override) ) {
 			ServiceConfiguration defaultConfiguration = ServiceConfiguration.getDefault();
 
-			SparqlEndpointConfiguration sparql = new SparqlEndpointConfiguration();
-			sparql.setEndpointQuery("http://localhost:7200/repositories/app");
-			sparql.setEndpointUpdate("http://localhost:7200/repositories/app/statements");
-			defaultConfiguration.setSparqlConfiguration(HelioService.toJson(sparql));
 			if(exists)
 				repository.delete(ServiceConfiguration.ID);
 			repository.persist(defaultConfiguration);

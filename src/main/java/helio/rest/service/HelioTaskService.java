@@ -2,31 +2,32 @@ package helio.rest.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-import helio.rest.HelioRest;
-import helio.rest.exception.InternalServiceException;
+import helio.blueprints.exceptions.ExtensionNotFoundException;
+import helio.blueprints.exceptions.IncompatibleMappingException;
+import helio.blueprints.exceptions.IncorrectMappingException;
+import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import helio.rest.exception.InvalidRequestException;
 import helio.rest.exception.ResourceNotPresentException;
 import helio.rest.model.HelioTranslationTask;
-import helio.rest.model.configuration.ServiceConfiguration;
-import helio.rest.model.configuration.HelioTranslationConfiguration;
 import helio.rest.repository.Repository;
-import sparql.streamline.core.SparqlEndpointConfiguration;
 
 public class HelioTaskService {
 
 	protected static final Repository<HelioTranslationTask> repository = new Repository<>(HelioTranslationTask.class);
 
-	public static void createHelio(HelioTranslationTask task) {
-		boolean exists  = repository.exists(task.getId());
-		if(exists)
-			throw new InvalidRequestException("A task with the provided \"id\" already exists");
-
-		//TODO: REMOVE if(task.getSparqlConfiguration()==null)
-		//	task.setConfiguration(HelioRest.serviceConfiguration.getSparqlConfiguration());
+	public static boolean createUpdateTask(HelioTranslationTask task) throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException, TranslationUnitExecutionException {
+		Optional<HelioTranslationTask> exists  = repository.retrieve(task.getId());
+		if(exists.isPresent()) {
+			HelioTranslationTask old = exists.get();
+			old.setMappingContent(task.getMappingContent());
+			if(task.getMappingProcessor()!=null && task.getMappingProcessor()!=old.getMappingProcessor())
+				old.setMappingProcessor(task.getMappingProcessor());
+		}else {
+			repository.persist(task);
+		}
 		
-		repository.persist(task);
+		return exists.isPresent();
 	}
 
 	public static HelioTranslationTask getTranslationTask(String id) {
@@ -45,6 +46,7 @@ public class HelioTaskService {
 		boolean exists  = repository.exists(id);
 		if(!exists)
 			throw new InvalidRequestException("Requested Helio task not found");
+		HelioTranslationTask.helios.remove(id); // delete in memory
 		repository.delete(id);
 	}
 

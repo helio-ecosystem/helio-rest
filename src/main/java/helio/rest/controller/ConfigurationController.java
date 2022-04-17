@@ -5,7 +5,7 @@ import org.eclipse.jetty.http.MimeTypes;
 
 import helio.rest.HelioService;
 import helio.rest.exception.InvalidRequestException;
-import helio.rest.model.configuration.ServiceConfiguration;
+import helio.rest.model.ServiceConfiguration;
 import helio.rest.service.HelioConfigurationService;
 import spark.Response;
 import spark.Request;

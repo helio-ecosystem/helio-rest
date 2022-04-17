@@ -1,10 +1,9 @@
 package helio.rest.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,23 +12,16 @@ import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import helio.Helio;
-import helio.TranslationUnitAlfa;
+import helio.blueprints.TranslationUnit;
+import helio.blueprints.components.Components;
 import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.blueprints.exceptions.IncompatibleMappingException;
 import helio.blueprints.exceptions.IncorrectMappingException;
-import helio.blueprints.exceptions.MappingExecutionException;
-import helio.blueprints.mappings.TripleMapping;
-import helio.blueprints.objects.TranslationUnit;
-import helio.components.processors.MappingProcessors;
-import helio.rest.HelioRest;
+import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import helio.rest.HelioService;
-import sparql.streamline.core.SparqlEndpoint;
-import sparql.streamline.core.SparqlEndpointConfiguration;
-import sparql.streamline.exception.SparqlConfigurationException;
 
 @Entity
 public class HelioTranslationTask {
@@ -42,65 +34,34 @@ public class HelioTranslationTask {
 	@Lob
 	@JsonIgnore
 	private String mappingContent;
-
+	
 	private String mappingProcessor;
 
-	@Column(name = "sparql_configuration", columnDefinition = "BLOB")
-	@Lob
-	private String configuration;
-
 	private int threads;
-	
-	@Transient @JsonIgnore
-	private Helio helio;
 
-	// TODO: private List<HelioTranslationUnit> translationUnits;
+	@Transient @JsonIgnore
+	public static Map<String, Helio> helios = new ConcurrentHashMap<>();
+	
 	
 	// -- Constructor
 
 	public HelioTranslationTask() {
-		this.id = String.valueOf(UUID.randomUUID());
-		this.threads = 10;
-		this.helio = new Helio();
-		//this.translationUnits = new ArrayList<>();
-		this.mappingProcessor = HelioRest.serviceConfiguration.getTranslationConfiguration().getDefaultMappingProcessor();
-		try {
-			this.configuration = HelioRest.serviceConfiguration.getSparqlConfigurationRaw();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.threads = 1;	
 	}
 
 	// -- Ancillary methods
 
-	public String asemble() throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException,
-			SparqlConfigurationException, MappingExecutionException {
-		
-		this.helio.clearExecutors();
-		StringBuilder errors = new StringBuilder();
-		Set<TripleMapping> mapping = new HashSet<>();
-		if (mappingContent != null && !mappingContent.isBlank() && mappingProcessor != null
-				&& !mappingProcessor.isBlank()) {
-			mapping = MappingProcessors.processMapping(mappingProcessor, mappingContent);
-		} else if (mappingContent != null && !mappingContent.isBlank() && mappingProcessor == null) {
-			mapping = MappingProcessors.processMapping(mappingContent);
+	public void asemble() throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException, TranslationUnitExecutionException {
+		Helio helio = new Helio(threads);
+		if (mappingContent != null && !mappingContent.isBlank() && mappingProcessor != null && !mappingProcessor.isBlank()) {
+			Set<TranslationUnit> units = Components.getMappingProcessors().get(mappingProcessor).parseMapping(mappingContent);
+			for(TranslationUnit unit:units) 
+				helio.add(unit);
+			helios.put(this.id, helio);
+		} else {
+			String message = HelioService.concat("Translation task '",this.id,"' can not be asembled because it has no mapping");
+			throw new IncorrectMappingException(message);
 		}
-		mapping.parallelStream().map(tm -> {
-			try {
-				TranslationUnit unit = new TranslationUnitAlfa(new SparqlEndpoint(getSparqlConfiguration()), tm, threads);
-				//TODO: add here the information
-				//HelioTranslationUnit helioUnit = new HelioTranslationUnit();
-				//this.translationUnits.add(helioUnit);
-				return unit;
-			} catch (Exception e) {
-				errors.append(e.toString());
-				e.printStackTrace();
-
-			}
-			return null;
-		}).filter(elem -> elem != null).forEach(tUnit -> this.helio.add(tUnit));
-	
-		return errors.toString();
 	}
 
 	// -- Getters & Setters
@@ -121,6 +82,16 @@ public class HelioTranslationTask {
 		this.mappingContent = mappingContent;
 	}
 
+	
+	public String getMappingLink() {
+		if(!mappingContent.isBlank())
+			return HelioService.concat("/",id,"/mapping");
+		return null;
+	}
+
+
+
+
 	public String getMappingProcessor() {
 		return mappingProcessor;
 	}
@@ -128,22 +99,14 @@ public class HelioTranslationTask {
 	public void setMappingProcessor(String mappingProcessor) {
 		this.mappingProcessor = mappingProcessor;
 	}
-
-	public SparqlEndpointConfiguration getSparqlConfiguration() throws JsonMappingException, JsonProcessingException {
-		return HelioService.MAPPER.readValue(this.configuration, SparqlEndpointConfiguration.class);
-	}
-
-	public void setSparqlConfiguration(String sparqlConfiguration) {
-		this.configuration = sparqlConfiguration;
-	}
 	
 	public Helio getHelio() {
-		return helio;
+		return helios.get(this.id);
 	}
 
 
 	public void setHelio(Helio helio) {
-		this.helio = helio;
+		helios.put(this.id, helio);
 	}
 
 

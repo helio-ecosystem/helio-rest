@@ -4,7 +4,7 @@ package helio.rest.controller;
 import org.apache.http.HttpHeaders;
 import org.eclipse.jetty.http.MimeTypes;
 
-import helio.blueprints.Component;
+import helio.blueprints.components.Component;
 import helio.rest.HelioService;
 import helio.rest.exception.InvalidRequestException;
 import helio.rest.service.HelioComponentService;

@@ -1,27 +1,30 @@
 [
   {
-    "source": "https://github.com/helio-ecosystem/helio-handler-jayway/releases/download/v0.0.2/helio-handler-jayway-0.0.2.jar",
-    "clazz": "handlers.JsonHandler",
+    "source": "/Users/andreacimmino/Desktop/helio-handler-csv-0.1.0.jar",
+    "clazz": "handlers.CsvHandler",
     "type": "HANDLER"
   },
   {
-    "source": "https://github.com/helio-ecosystem/helio-provider-url/releases/download/v0.0.1/helio-provider-url-0.0.1.jar",
-    "clazz": "provider.URLProvider",
+    "source": "https://github.com/helio-ecosystem/helio-handler-jayway/releases/download/v0.1.0/helio-handler-jayway-0.1.0.jar",
+    "clazz": "handlers.JsonHandler",
+    "type": "HANDLER"
+  },{
+    "source": "https://github.com/helio-ecosystem/helio-provider-files/releases/download/v0.1.1/helio-provider-files-0.1.1.jar",
+    "clazz": "helio.providers.files.FileProvider",
     "type": "PROVIDER"
   },
   {
-    "source": "https://github.com/helio-ecosystem/helio-provider-file/releases/download/v.0.0.1/helio-provider-file-0.0.1.jar",
-    "clazz": "providers.FileProvider",
+    "source": "https://github.com/helio-ecosystem/helio-provider-files/releases/download/v0.1.1/helio-provider-files-0.1.1.jar",
+    "clazz": "helio.providers.files.FileWatcherProvider",
     "type": "PROVIDER"
-  },
-  {
-    "source": "https://github.com/helio-ecosystem/helio-processor-jmapping/releases/download/v0.2.0/helio-processor-jmapping-0.2.0.jar",
-    "clazz": "helio.jmapping.processor.JMappingProcessor",
-    "type": "PROCESSOR"
-  },
-  {
-    "source": "https://github.com/helio-ecosystem/helio-processor-jmapping/releases/download/v0.2.0/helio-processor-jmapping-0.2.0.jar",
-    "clazz": "helio.jmapping.functions.HF",
-    "type": "FUNCTION"
+  },{
+    "source": "/Users/andreacimmino/Desktop/helio-builder-jld11map-0.1.4.jar",
+    "clazz": "helio.builder.jld11map.JLD11Builder",
+    "type": "BUILDER"
+  },{
+    "source": "/Users/andreacimmino/Desktop/helio-processor-jmapping-0.2.4.jar",
+    "clazz": "helio.jmapping.builder.JMappingBuilder",
+    "type": "BUILDER"
   }
+
 ]

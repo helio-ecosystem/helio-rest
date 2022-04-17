@@ -10,8 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import helio.blueprints.Component;
-import helio.blueprints.Components;
+import helio.blueprints.components.Component;
+import helio.blueprints.components.Components;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.model.HelioComponent;
 import helio.rest.model.HelioTranslationTask;
@@ -40,15 +40,21 @@ public class HelioService {
 			throw new InternalServiceException( e.toString());
 		}
 	}
+	
+	public static final String concat(String ... args) {
+		StringBuilder builder = new StringBuilder();
+		for(int index=0; index < args.length; index++) {
+			builder.append(args[index]);
+		}
+		return builder.toString();
+	}
 
 	// -- Translation tasks methods
-	public static List<HelioTranslationTask> currentTasks = new CopyOnWriteArrayList<>();
 	
 	public static void initTasks(){
 		HelioTaskService.listHelioTasks().parallelStream().forEach(hTask -> {
 			try {
 				hTask.asemble();
-				currentTasks.add(hTask);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

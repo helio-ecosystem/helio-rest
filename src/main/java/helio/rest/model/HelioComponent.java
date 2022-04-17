@@ -10,7 +10,7 @@ import javax.persistence.Lob;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import helio.blueprints.Component;
+import helio.blueprints.components.Component;
 import helio.rest.HelioService;
 
 @Entity

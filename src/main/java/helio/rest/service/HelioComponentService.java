@@ -6,8 +6,8 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import helio.blueprints.Component;
-import helio.blueprints.Components;
+import helio.blueprints.components.Component;
+import helio.blueprints.components.Components;
 import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.exception.InvalidRequestException;
