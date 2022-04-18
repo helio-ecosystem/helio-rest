@@ -25,11 +25,11 @@ public class HelioMappingController {
 
 	// Processors
 	
-	public static final Route listProcessors = (Request request, Response response) -> {
+	/*public static final Route listProcessors = (Request request, Response response) -> {
 		response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
 		response.status(200);
 		return HelioService.toJson(Components.getMappingProcessors().keySet());
-	};
+	};*/
 
 
 }

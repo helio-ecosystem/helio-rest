@@ -23,6 +23,8 @@ public class HelioTaskService {
 			old.setMappingContent(task.getMappingContent());
 			if(task.getMappingProcessor()!=null && task.getMappingProcessor()!=old.getMappingProcessor())
 				old.setMappingProcessor(task.getMappingProcessor());
+			repository.delete(old.getId());
+			repository.persist(old);
 		}else {
 			repository.persist(task);
 		}

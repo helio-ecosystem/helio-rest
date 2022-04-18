@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import helio.blueprints.components.Component;
 import helio.blueprints.components.Components;
-import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.exception.InvalidRequestException;
 import helio.rest.exception.ResourceNotPresentException;

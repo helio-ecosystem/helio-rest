@@ -60,12 +60,13 @@ public class HelioRest {
 	        get("/:id/mapping", TranslationTaskController.getMapping);
 	        get("/:id/data", TranslationTaskController.getTranslationData);
 	        
-	        
 	       
-	        // TODO: ? post("/sparql", DataGenerationController.getData);
+	        //TODO: meter una query federada para hablar de los horizontal services
+	        // el Knowledge graph service te da la vista interoperable de tus datos
+	       
 	    });
 
-     
+        post("/sparql", TranslationTaskController.queryData);
         
         path("/component", () -> {
         	get("/", ComponentController.list);
@@ -76,7 +77,7 @@ public class HelioRest {
 	        get("/:id", ComponentController.get);
 	        delete("/:id", ComponentController.delete);
         });
-        get("/processors", HelioMappingController.listProcessors);
+       // get("/processors", HelioMappingController.listProcessors);
 
         path("/configuration", () -> {
 	         get("/", ConfigurationController.getSingleton);

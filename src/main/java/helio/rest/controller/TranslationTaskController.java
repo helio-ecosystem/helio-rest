@@ -1,14 +1,31 @@
 package helio.rest.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.http.HttpHeaders;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFormatter;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.sparql.resultset.ResultsFormat;
 import org.eclipse.jetty.http.MimeTypes;
+import org.eclipse.jetty.util.thread.Scheduler.Task;
+import org.hibernate.query.criteria.internal.predicate.IsEmptyPredicate;
+
 import spark.Request;
 import helio.Helio;
+import helio.blueprints.exceptions.HelioExecutionException;
+import helio.blueprints.exceptions.IncompatibleMappingException;
+import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import helio.rest.HelioRest;
 import helio.rest.HelioService;
+import helio.rest.JSONLD11;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.exception.InvalidRequestException;
 import helio.rest.exception.ResourceNotPresentException;
@@ -99,12 +116,66 @@ public class TranslationTaskController {
 		data.parallelStream().forEach(elem -> str.append(elem));
 		//String mappingBuilder = task.getMappingProcessor();
 		//if(mappingBuilder!=null && (mappingBuilder.equals(HelioRest.DEFAULT_MAPPING_PROCESSOR)))
-		response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
+		//response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
 		}catch(Exception e) {
 			throw new InternalServiceException(e.toString());
 		}
 		return str.toString();
 	};
+	
+	public static final Route queryData = (Request request, Response response) -> {
+		String query = request.body();
+		if(query==null || query.isEmpty())
+			throw new InvalidRequestException("Provide a valid SELECT SPARQL query");
+		Model model = ModelFactory.createDefaultModel();
+		HelioTaskService.listHelioTasks()
+					.parallelStream()
+					.filter(task -> task.getMappingProcessor().equals(HelioRest.DEFAULT_MAPPING_PROCESSOR))
+					.map(task -> HelioTranslationTask.helios.get(task.getId()))
+					.flatMap(helio -> {
+						try {
+							return helio.readAndFlushAll().stream();
+						} catch (HelioExecutionException | TranslationUnitExecutionException e) {
+							e.printStackTrace();
+						}
+						return null;
+					})
+					.filter(elem -> elem !=null).forEach(fragment -> {
+						try {
+							model.add(JSONLD11.loadIntoModel(fragment));
+						} catch (IncompatibleMappingException e) {
+							e.printStackTrace();
+						}
+					});
+		
+		HelioTaskService.listHelioTasks()
+		.parallelStream()
+		.filter(task -> !task.getMappingProcessor().equals(HelioRest.DEFAULT_MAPPING_PROCESSOR))
+		.map(task -> HelioTranslationTask.helios.get(task.getId()))
+		.flatMap(helio -> {
+			try {
+				return helio.readAndFlushAll().stream();
+			} catch (HelioExecutionException | TranslationUnitExecutionException e) {
+				e.printStackTrace();
+			}
+			return null;
+		})
+		.filter(elem -> elem !=null).forEach(fragment -> {
+				//model.read(new Bytefragment);
+			Model model2 = ModelFactory.createDefaultModel();
+			model2.read(new ByteArrayInputStream(fragment.getBytes()), null, "TURTLE");
+			model.add(model);
+			model2.close();
+		});
+		
+		
+	    QueryExecution qexec = QueryExecutionFactory.create(QueryFactory.create(query), model);
+	    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		ResultSetFormatter.output(stream, qexec.execSelect(), ResultsFormat.FMT_RS_JSON);
+		return stream;
+	};
+	
+	
 	
 	protected static final String fetchId(Request request) {
 		String id = request.params("id");

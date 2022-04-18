@@ -50,11 +50,11 @@ public class HelioTranslationTask {
 	}
 
 	// -- Ancillary methods
-
+	@JsonIgnore
 	public void asemble() throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException, TranslationUnitExecutionException {
 		Helio helio = new Helio(threads);
 		if (mappingContent != null && !mappingContent.isBlank() && mappingProcessor != null && !mappingProcessor.isBlank()) {
-			Set<TranslationUnit> units = Components.getMappingProcessors().get(mappingProcessor).parseMapping(mappingContent);
+			Set<TranslationUnit> units = Components.newBuilderInstance(mappingProcessor).parseMapping(mappingContent);
 			for(TranslationUnit unit:units) 
 				helio.add(unit);
 			helios.put(this.id, helio);
@@ -85,10 +85,15 @@ public class HelioTranslationTask {
 	
 	public String getMappingLink() {
 		if(!mappingContent.isBlank())
-			return HelioService.concat("/",id,"/mapping");
+			return HelioService.concat("/api/",id,"/mapping");
 		return null;
 	}
 
+	public String getDataLink() {
+		if(!mappingContent.isBlank())
+			return HelioService.concat("/api/",id,"/data");
+		return null;
+	}
 
 
 
@@ -100,11 +105,12 @@ public class HelioTranslationTask {
 		this.mappingProcessor = mappingProcessor;
 	}
 	
+	@JsonIgnore
 	public Helio getHelio() {
 		return helios.get(this.id);
 	}
 
-
+	@JsonIgnore
 	public void setHelio(Helio helio) {
 		helios.put(this.id, helio);
 	}

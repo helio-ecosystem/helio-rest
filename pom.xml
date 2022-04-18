@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.helio-ecosystem</groupId>
 	<artifactId>helio-rest-api</artifactId>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<name>Helio REST</name>
 
 	<properties>
@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>io.github.helio-ecosystem</groupId>
 			<artifactId>helio-core</artifactId>
-			<version>0.4.11</version>
+			<version>0.4.12</version>
 		</dependency>
 
 		<dependency>
