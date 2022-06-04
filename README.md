@@ -1,6 +1,29 @@
 # Helio REST API
 
+# Quickstart
 
+Using docker run docker-compose with the following recipe
+````yml
+version: '2'
+services:
+  semanticadapter:
+    image: acimmino/helio-rest:latest
+    volumes: 
+      - type: volume
+        source: helio-db
+        target: /helio/app
+        volume: {}
+    ports:
+      - '4567:4567'
+volumes:
+  helio-db:
+    name: helio-db
+````
+
+Using java download the [latest released version](https://github.com/helio-ecosystem/helio-rest/releases) and run the script `run.sh`
+
+
+# API
 | Endpoint | Method | Description |
 |--|--|--|
 | `/api/`  |  `GET` | Returns the list of data endpoints provided by the service|
