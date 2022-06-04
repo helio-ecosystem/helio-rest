@@ -12,7 +12,6 @@ import static spark.Spark.put;
 import static spark.Spark.get;
 import helio.rest.controller.ComponentController;
 import helio.rest.controller.ConfigurationController;
-import helio.rest.controller.HelioMappingController;
 import helio.rest.controller.TranslationTaskController;
 import helio.rest.exception.Exceptions;
 import helio.rest.exception.InternalServiceException;
@@ -28,11 +27,12 @@ public class HelioRest {
 
 	// -- Attributes
 	public static ServiceConfiguration serviceConfiguration =null;
-	public static final String DEFAULT_MAPPING_PROCESSOR = "JLD11Builder";
+	public static final String DEFAULT_MAPPING_PROCESSOR = "SIoTBuilder";
 	// -- Main
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
+		System.out.println(LOGO);
 		 // Configuration
 		configure();
 		// The following methods need to be ran in the order
@@ -66,7 +66,7 @@ public class HelioRest {
 	       
 	    });
 
-        post("/sparql", TranslationTaskController.queryData);
+       // post("/sparql", TranslationTaskController.queryData);
         
         path("/component", () -> {
         	get("/", ComponentController.list);
@@ -103,4 +103,21 @@ public class HelioRest {
 		// TODO:ADD OTHER PARAMETERS
 		port(serviceConfiguration.getPort());
 	}
+	
+	private static final String LOGO = ""
+			+ "██╗  ██╗███████╗██╗     ██╗ ██████╗ \n"
+			+ "██║  ██║██╔════╝██║     ██║██╔═══██╗\n"
+			+ "███████║█████╗  ██║     ██║██║   ██║\n"
+			+ "██╔══██║██╔══╝  ██║     ██║██║   ██║\n"
+			+ "██║  ██║███████╗███████╗██║╚██████╔╝\n"
+			+ "╚═╝  ╚═╝╚══════╝╚══════╝╚═╝ ╚═════╝ \n"
+			+ "                                    \n"
+			+ "██████╗ ███████╗███████╗████████╗   \n"
+			+ "██╔══██╗██╔════╝██╔════╝╚══██╔══╝   \n"
+			+ "██████╔╝█████╗  ███████╗   ██║      \n"
+			+ "██╔══██╗██╔══╝  ╚════██║   ██║      \n"
+			+ "██║  ██║███████╗███████║   ██║      \n"
+			+ "╚═╝  ╚═╝╚══════╝╚══════╝   ╚═╝      \n"
+			+ "				v0.4.6 \n";
+
 }

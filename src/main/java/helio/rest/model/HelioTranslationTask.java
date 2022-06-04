@@ -2,7 +2,6 @@ package helio.rest.model;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.persistence.Column;
@@ -12,8 +11,6 @@ import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import helio.Helio;
 import helio.blueprints.TranslationUnit;
 import helio.blueprints.components.Components;

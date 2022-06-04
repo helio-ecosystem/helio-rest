@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +12,6 @@ import helio.blueprints.components.Component;
 import helio.blueprints.components.Components;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.model.HelioComponent;
-import helio.rest.model.HelioTranslationTask;
 import helio.rest.service.HelioComponentService;
 import helio.rest.service.HelioTaskService;
 
@@ -52,7 +49,7 @@ public class HelioService {
 	// -- Translation tasks methods
 	
 	public static void initTasks(){
-		HelioTaskService.listHelioTasks().parallelStream().forEach(hTask -> {
+		HelioTaskService.listHelioTasks().stream().forEach(hTask -> {
 			try {
 				hTask.asemble();
 			} catch (Exception e) {

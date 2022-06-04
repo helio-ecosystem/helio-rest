@@ -1,9 +1,5 @@
 [
-  {
-    "source": "/Users/andreacimmino/Desktop/helio-handler-csv-0.1.0.jar",
-    "clazz": "handlers.CsvHandler",
-    "type": "HANDLER"
-  },
+ 
   {
     "source": "https://github.com/helio-ecosystem/helio-handler-jayway/releases/download/v0.1.1/helio-handler-jayway-0.1.1.jar",
     "clazz": "handlers.JsonHandler",
@@ -22,12 +18,12 @@
     "clazz": "provider.URLProvider",
     "type": "PROVIDER"
   },{
-    "source": "https://github.com/helio-ecosystem/helio-builder-jld11map/releases/download/v0.1.6/helio-builder-jld11map-0.1.6.jar",
-    "clazz": "helio.builder.jld11map.JLD11Builder",
+    "source": "https://github.com/helio-ecosystem/helio-builder-siot/releases/download/v0.1.7/helio-builder-siot-0.1.7.jar",
+    "clazz": "helio.builder.siot.SIoTBuilder",
     "type": "BUILDER"
   },{
-    "source": "/Users/andreacimmino/Desktop/helio-processor-jmapping-0.2.4.jar",
-    "clazz": "helio.jmapping.builder.JMappingBuilder",
+    "source": "https://github.com/helio-ecosystem/helio-builder-rmlmapper/releases/download/v0.1.1/helio-builder-rmlmapper-0.1.1.jar",
+    "clazz": "helio.builder.rmlmapper.RmlUnitBuilder",
     "type": "BUILDER"
   }
 

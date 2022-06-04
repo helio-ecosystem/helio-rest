@@ -9,15 +9,11 @@ import org.apache.http.HttpHeaders;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.sparql.resultset.ResultsFormat;
 import org.eclipse.jetty.http.MimeTypes;
-import org.eclipse.jetty.util.thread.Scheduler.Task;
-import org.hibernate.query.criteria.internal.predicate.IsEmptyPredicate;
-
 import spark.Request;
 import helio.Helio;
 import helio.blueprints.exceptions.HelioExecutionException;
@@ -50,7 +46,7 @@ public class TranslationTaskController {
 	public static final Route createUpdate = (Request request, Response response) -> {
 		response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
 		String id = request.params("id");
-		String builder = request.params("builder");
+		String builder = request.queryParams("builder");
 		String body = request.body();
 		if(body==null || body.isBlank())
 			throw new InvalidRequestException(HelioService.concat("Missing mapping in the body for instantiating the translation task. Provide a valid mapping and use the argument ?builder for parsing the mapping (by default ", HelioRest.DEFAULT_MAPPING_PROCESSOR, " is used)"));

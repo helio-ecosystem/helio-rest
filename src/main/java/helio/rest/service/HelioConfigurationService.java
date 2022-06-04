@@ -2,11 +2,9 @@ package helio.rest.service;
 
 import java.util.Optional;
 
-import helio.rest.HelioService;
 import helio.rest.exception.ResourceNotPresentException;
 import helio.rest.model.ServiceConfiguration;
 import helio.rest.repository.Repository;
-import sparql.streamline.core.SparqlEndpointConfiguration;
 
 public class HelioConfigurationService {
 
