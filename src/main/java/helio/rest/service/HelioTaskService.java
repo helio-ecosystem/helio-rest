@@ -48,7 +48,7 @@ public class HelioTaskService {
 		boolean exists  = repository.exists(id);
 		if(!exists)
 			throw new InvalidRequestException("Requested Helio task not found");
-		HelioTranslationTask.helios.remove(id); // delete in memory
+		//aHelioTranslationTask.helios.remove(id); // delete in memory
 		repository.delete(id);
 	}
 

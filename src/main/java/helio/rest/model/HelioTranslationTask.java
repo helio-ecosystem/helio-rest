@@ -1,5 +1,6 @@
 package helio.rest.model;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,8 +38,13 @@ public class HelioTranslationTask {
 	private int threads;
 
 	@Transient @JsonIgnore
-	public static Map<String, Helio> helios = new ConcurrentHashMap<>();
+	public Set<TranslationUnit> units = new HashSet<>();
 	
+	
+	/*
+	 * La clave puede ser meter en esta clase unicamente el future y ejecutarlo
+	 * (si eso se puede usar un executor service statico)
+	 */
 	
 	// -- Constructor
 
@@ -49,12 +55,9 @@ public class HelioTranslationTask {
 	// -- Ancillary methods
 	@JsonIgnore
 	public void asemble() throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException, TranslationUnitExecutionException {
-		Helio helio = new Helio(threads);
 		if (mappingContent != null && !mappingContent.isBlank() && mappingProcessor != null && !mappingProcessor.isBlank()) {
-			Set<TranslationUnit> units = Components.newBuilderInstance(mappingProcessor).parseMapping(mappingContent);
-			for(TranslationUnit unit:units) 
-				helio.add(unit);
-			helios.put(this.id, helio);
+			this.units = Components.newBuilderInstance(mappingProcessor).parseMapping(mappingContent);
+			
 		} else {
 			String message = HelioService.concat("Translation task '",this.id,"' can not be asembled because it has no mapping");
 			throw new IncorrectMappingException(message);
@@ -103,14 +106,11 @@ public class HelioTranslationTask {
 	}
 	
 	@JsonIgnore
-	public Helio getHelio() {
-		return helios.get(this.id);
+	public Set<TranslationUnit> getUnits() {
+		return units;
 	}
 
-	@JsonIgnore
-	public void setHelio(Helio helio) {
-		helios.put(this.id, helio);
-	}
+	
 
 
 
