@@ -27,7 +27,7 @@ Using java download the [latest released version](https://github.com/helio-ecosy
 | Endpoint | Method | Description |
 |--|--|--|
 | `/api/`  |  `GET` | Returns the list of data endpoints provided by the service|
-| `/api/:id`  |  `POST` | Creates a translation task that using the mapping sent in the `body` of this request  |
+| `/api/:id`  |  `POST` | Creates a translation task that using the mapping sent in the `body` of this request. You can use a specific mapping compiler (BUILDER component) using the URL parameter ?builder=[BUILDER_NAME] |
 | `/api/:id`  |  `DELETE` | Deletes the translation task with the provided `:id`  |
 | `/api/:id/mapping`  |  `GET` | Returns the mapping registered for the translation task associated to the `:id`  |
 | `/api/:id/data`  |  `GET` | Returns the translated data as a result of the translation task  |
