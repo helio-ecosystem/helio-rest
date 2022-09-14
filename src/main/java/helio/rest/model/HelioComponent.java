@@ -9,6 +9,9 @@ import javax.persistence.Lob;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import helio.blueprints.components.Component;
 import helio.rest.HelioService;
@@ -18,6 +21,7 @@ public class HelioComponent {
 
 	@Id
 	private String id;
+	
 	@Column( name = "component", columnDefinition="BLOB NOT NULL")
 	@Lob
 	private String component;
@@ -28,7 +32,7 @@ public class HelioComponent {
 
 	public HelioComponent(Component component) {
 		this.component = HelioService.toJson(component);
-		this.id = String.valueOf(this.component.hashCode());
+		this.id = String.valueOf(this.component.hashCode()).replace('-', '0');
 	}
 
 	public String getId() {
@@ -45,7 +49,7 @@ public class HelioComponent {
 
 	public void setComponent(Component component) {
 		this.component = HelioService.toJson(component);
-		setId(""); 
+		setId(String.valueOf(this.component.hashCode()).replace('-', '0'));
 	}
 
 	@Override
@@ -65,9 +69,14 @@ public class HelioComponent {
 		return Objects.equals(component, other.component) && id == other.id;
 	}
 
+	private static final Gson gson= new Gson();
 	@Override
 	public String toString() {
-		return this.component;
+		JsonObject jsonObject =  gson.fromJson(this.component, JsonObject.class);
+		JsonObject component = new JsonObject();
+		component.addProperty("id", this.id);
+		component.add("component", jsonObject);
+		return component.toString();
 	}
 
 	

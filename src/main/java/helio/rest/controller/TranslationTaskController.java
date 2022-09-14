@@ -1,36 +1,23 @@
 package helio.rest.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import org.apache.http.HttpHeaders;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.ResultSetFormatter;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.sparql.resultset.ResultsFormat;
 import org.eclipse.jetty.http.MimeTypes;
+
+import com.github.jsonldjava.shaded.com.google.common.collect.Maps;
+
 import spark.Request;
-import helio.Helio;
 import helio.blueprints.TranslationUnit;
-import helio.blueprints.exceptions.HelioExecutionException;
-import helio.blueprints.exceptions.IncompatibleMappingException;
-import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import helio.rest.HelioRest;
 import helio.rest.HelioService;
-import helio.rest.JSONLD11;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.exception.InvalidRequestException;
-import helio.rest.exception.ResourceNotPresentException;
 import helio.rest.model.HelioTranslationTask;
 import helio.rest.service.HelioTaskService;
 import spark.Response;
@@ -110,33 +97,28 @@ public class TranslationTaskController {
 
 	public static final Route getTranslationData = (Request request, Response response) -> {
 		String id = fetchId(request);
-		StringBuilder str = new StringBuilder();
 		HelioTranslationTask task = HelioTaskService.getTranslationTask(id);
 		task.asemble();
-			
-		try {
-			return task.getUnits().parallelStream().map(uniT -> runUnit(uniT)).collect(Collectors.joining());
+		Map<String, Object> params = Maps.newHashMap(request.params());
+		// TODO: add to params things from the headers or from the body
 		
-		//data.parallelStream().forEach(elem -> str.append(elem));
-		//String mappingBuilder = task.getMappingProcessor();
-		//if(mappingBuilder!=null && (mappingBuilder.equals(HelioRest.DEFAULT_MAPPING_PROCESSOR)))
-		//response.header(HttpHeaders.CONTENT_TYPE, MimeTypes.Type.APPLICATION_JSON_UTF_8.asString());
+		try {
+			return task.getUnits().parallelStream().map(uniT -> runUnit(uniT, params)).collect(Collectors.joining());
 		}catch(Exception e) {
 			throw new InternalServiceException(e.toString());
 		}
-		//return str.toString();
 	};
 	
-	public static String runUnit(TranslationUnit unit)  {
+	public static String runUnit(TranslationUnit unit, Map<String,Object> args)  {
 		String result =  "";
 		try {
-		Future<?> f = service.submit(unit.getTask());
-		f.get();
-		result = unit.getDataTranslated().get(0);
+		Future<String> f = service.submit(unit.getTask(args));
+		
+		result = f.get();
 		
 		f.cancel(true);
 		}catch(Exception e) {
-			e.printStackTrace();
+			throw new InternalServiceException(e.toString());
 		}
 		return result;
 	}

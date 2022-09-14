@@ -84,8 +84,6 @@ public class HelioService {
 	protected static void registerComponents() {
 		HelioComponentService.list().parallelStream().forEach(helioComponent -> {
 			try {
-				
-				
 				Components.registerAndLoad(helioComponent.getComponent());
 			} catch (Exception e) {
 				e.printStackTrace();

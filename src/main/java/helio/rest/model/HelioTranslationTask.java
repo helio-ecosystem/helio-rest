@@ -1,10 +1,7 @@
 package helio.rest.model;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,7 +9,6 @@ import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import helio.Helio;
 import helio.blueprints.TranslationUnit;
 import helio.blueprints.components.Components;
 import helio.blueprints.exceptions.ExtensionNotFoundException;

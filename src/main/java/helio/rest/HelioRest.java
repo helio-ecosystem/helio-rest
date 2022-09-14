@@ -27,7 +27,7 @@ public class HelioRest {
 
 	// -- Attributes
 	public static ServiceConfiguration serviceConfiguration =null;
-	public static final String DEFAULT_MAPPING_PROCESSOR = "SIoTBuilder";
+	public static final String DEFAULT_MAPPING_PROCESSOR = "SIoTRxBuilder";
 	// -- Main
 
 	@SuppressWarnings("unchecked")
@@ -51,7 +51,6 @@ public class HelioRest {
 	        get("", TranslationTaskController.list);  // DONE
 	        
 	        
-	        // TODO: check if providing a jsonld mapping with the other builder it trhows error
 	        get("/:id", TranslationTaskController.get);
 	        post("/:id", TranslationTaskController.createUpdate);  // DONE
 	        delete("/:id", TranslationTaskController.delete);
@@ -118,6 +117,6 @@ public class HelioRest {
 			+ "██╔══██╗██╔══╝  ╚════██║   ██║      \n"
 			+ "██║  ██║███████╗███████║   ██║      \n"
 			+ "╚═╝  ╚═╝╚══════╝╚══════╝   ╚═╝      \n"
-			+ "				v0.4.6 \n";
+			+ "				v0.4.8* \n";
 
 }
