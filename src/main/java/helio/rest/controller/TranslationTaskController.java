@@ -1,6 +1,7 @@
 package helio.rest.controller;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -99,9 +100,16 @@ public class TranslationTaskController {
 		String id = fetchId(request);
 		HelioTranslationTask task = HelioTaskService.getTranslationTask(id);
 		task.asemble();
-		Map<String, Object> params = Maps.newHashMap(request.params());
-		// TODO: add to params things from the headers or from the body
+		Map<String, Object> params = Maps.newHashMap();
+		for(Entry<String,String[]> entries: request.queryMap().toMap().entrySet()) {
+			if(entries.getValue().length==1) {
+				params.put(entries.getKey(), entries.getValue()[0]);
+			}else {
+				params.put(entries.getKey(), entries.getValue());
+			}
+		}
 		
+		// TODO: add to params things from the headers or from the body
 		try {
 			return task.getUnits().parallelStream().map(uniT -> runUnit(uniT, params)).collect(Collectors.joining());
 		}catch(Exception e) {
