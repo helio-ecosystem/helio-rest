@@ -8,17 +8,17 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.delete;
 
-import static spark.Spark.put;
+import java.util.Arrays;
+import java.util.List;
+
 import static spark.Spark.get;
 import helio.rest.controller.ComponentController;
-import helio.rest.controller.ConfigurationController;
 import helio.rest.controller.TranslationTaskController;
 import helio.rest.exception.Exceptions;
 import helio.rest.exception.InternalServiceException;
 import helio.rest.exception.InvalidRequestException;
 import helio.rest.exception.ResourceNotPresentException;
-import helio.rest.model.ServiceConfiguration;
-import helio.rest.service.HelioConfigurationService;
+import helio.rest.repository.HibernateUtil;
 import helio.rest.spark.CorsFilter;
 import helio.rest.spark.OptionsController;
 
@@ -26,21 +26,18 @@ import helio.rest.spark.OptionsController;
 public class HelioRest {
 
 	// -- Attributes
-	public static ServiceConfiguration serviceConfiguration =null;
-	public static final String DEFAULT_MAPPING_PROCESSOR = "SIoTRxBuilder";
+	public static String DEFAULT_MAPPING_PROCESSOR = "SIoTRxBuilder";
+	public static String DEFAULT_COMPONENTS = "./default-components.json";
+	public static String DEFAULT_PERSISTENCE = "./rest-db";
+	
 	// -- Main
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		System.out.println(LOGO);
 		 // Configuration
-		configure();
-		// The following methods need to be ran in the order
-        // they are currently written
-        HelioService.loadDefaultComponents();
-        HelioService.registerComponents();
-        HelioService.initTasks();
-
+		configure(args);
+		
 		// List routes
         before(new CorsFilter());
         new OptionsController();
@@ -76,17 +73,7 @@ public class HelioRest {
 	        get("/:id", ComponentController.get);
 	        delete("/:id", ComponentController.delete);
         });
-       // get("/processors", HelioMappingController.listProcessors);
-
-        path("/configuration", () -> {
-	         get("/", ConfigurationController.getSingleton);
-	         get("", ConfigurationController.getSingleton);
-		     post("", ConfigurationController.updateSingleton);
-		     post("/", ConfigurationController.updateSingleton);
-		     put("", ConfigurationController.restoreSingleton);
-		     put("/", ConfigurationController.restoreSingleton);
-	       });
-//        post("/test", new RoutePostComponent());
+       
         // Exceptions
         exception(InternalServiceException.class, InternalServiceException.handle);
         exception(ResourceNotPresentException.class, ResourceNotPresentException.handle);
@@ -96,11 +83,34 @@ public class HelioRest {
 
 	}
 
-	private static void configure() {
-		if(serviceConfiguration == null)
-			serviceConfiguration = HelioConfigurationService.createDefault(false);
-		// TODO:ADD OTHER PARAMETERS
-		port(serviceConfiguration.getPort());
+	private static final String PORT = "--port=";
+	private static final String PERSISTENCE = "--persistence=";
+	private static final String COMPONENTS_DEFAULT = "--components=";
+	private static final String BUILDER_DEFAULT = "--default_builder=";
+	
+	
+	private static void configure(String[] args) {
+	
+		List<String> arguments = Arrays.asList(args);
+		for(String arg: arguments) {
+			if(arg.startsWith(PORT)) {
+				port(Integer.valueOf(arg.replace(PORT, "")));
+			}else if(arg.startsWith(PERSISTENCE)) {
+				HelioRest.DEFAULT_PERSISTENCE = arg.replace(PERSISTENCE, "");
+			}else if(arg.startsWith(COMPONENTS_DEFAULT)) {
+				HelioRest.DEFAULT_COMPONENTS = arg.replace(COMPONENTS_DEFAULT, "");
+			}else if(arg.startsWith(BUILDER_DEFAULT)) {
+				HelioRest.DEFAULT_MAPPING_PROCESSOR = arg.replace(BUILDER_DEFAULT, "");
+			}
+			
+		}
+		// Init Db
+		HibernateUtil.getSessionFactory();
+		// The following methods need to be ran in the order
+        // they are currently written
+        HelioService.loadDefaultComponents();
+        HelioService.registerComponents();
+        HelioService.initTasks();
 	}
 	
 	private static final String LOGO = ""
@@ -117,6 +127,6 @@ public class HelioRest {
 			+ "██╔══██╗██╔══╝  ╚════██║   ██║      \n"
 			+ "██║  ██║███████╗███████║   ██║      \n"
 			+ "╚═╝  ╚═╝╚══════╝╚══════╝   ╚═╝      \n"
-			+ "				v0.4.8+ \n";
+			+ "				v0.4.9 \n";
 
 }

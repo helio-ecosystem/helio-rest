@@ -1,5 +1,4 @@
 [
- 
   {
     "source": "./components/helio-handler-jayway-0.1.1.jar",
     "clazz": "handlers.JsonHandler",
@@ -22,13 +21,18 @@
     "clazz": "helio.providers.HttpProvider",
     "type": "PROVIDER"
   },{
-    "source": "./components/helio-builder-siot-0.1.9.jar",
+    "source": "./components/helio-builder-siot-0.1.10.jar",
     "clazz": "helio.builder.siot.rx.SIoTRxBuilder",
     "type": "BUILDER"
   },{
     "source": "./components/helio-builder-rmlmapper-0.1.2.jar",
     "clazz": "helio.builder.rmlmapper.RmlUnitBuilder",
     "type": "BUILDER"
+  },{
+    "source": "./components/helio-provider-mqtt-0.1.1.jar",
+    "clazz": "helio.providers.MqttProvider",
+    "type": "PROVIDER"
   }
+
 
 ]

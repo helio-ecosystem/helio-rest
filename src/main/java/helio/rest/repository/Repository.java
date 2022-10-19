@@ -52,7 +52,7 @@ public class Repository<T> {
 			session.beginTransaction();
 			return session.createQuery(this.queryExists, Long.class).setParameter(columnName, id).uniqueResult() > 0;
         } catch (Exception e) {
-        	e.printStackTrace();
+        	//e.printStackTrace();
         	throw new InternalServiceException(e.toString());
         }
 	}

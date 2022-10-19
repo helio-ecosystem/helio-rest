@@ -34,7 +34,7 @@ public class HelioTranslationTask {
 	private int threads;
 
 	@Transient @JsonIgnore
-	public Set<TranslationUnit> units = new HashSet<>();
+	public static Set<TranslationUnit> units = new HashSet<>();
 	
 	
 	/*
@@ -50,13 +50,17 @@ public class HelioTranslationTask {
 
 	// -- Ancillary methods
 	@JsonIgnore
-	public void asemble() throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException, TranslationUnitExecutionException {
-		if (mappingContent != null && !mappingContent.isBlank() && mappingProcessor != null && !mappingProcessor.isBlank()) {
-			this.units = Components.newBuilderInstance(mappingProcessor).parseMapping(mappingContent);
-			
-		} else {
-			String message = HelioService.concat("Translation task '",this.id,"' can not be asembled because it has no mapping");
-			throw new IncorrectMappingException(message);
+	public void asemble() throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException,
+			TranslationUnitExecutionException {
+		if (units.isEmpty()) {
+			if (mappingContent != null && !mappingContent.isBlank() && mappingProcessor != null
+					&& !mappingProcessor.isBlank()) {
+				units = Components.newBuilderInstance(mappingProcessor).parseMapping(mappingContent);
+			} else {
+				String message = HelioService.concat("Translation task '", this.id,
+						"' can not be asembled because it has no mapping");
+				throw new IncorrectMappingException(message);
+			}
 		}
 	}
 

@@ -31,8 +31,14 @@ Using java download the [latest released version](https://github.com/helio-ecosy
 | `/api/:id`  |  `DELETE` | Deletes the translation task with the provided `:id`  |
 | `/api/:id/mapping`  |  `GET` | Returns the mapping registered for the translation task associated to the `:id`  |
 | `/api/:id/data`  |  `GET` | Returns the translated data as a result of the translation task  |
-| `/configuration`  |  `GET` | Returns the configuration of this service  |
-| `/configuration`  |  `POST` | Modifies the configuration of the service with the one sent in the `body` of this request  |
 | `/component`  |  `GET` | Returns the list of components registered in the service that can be used in the mappings  |
 | `/component`  |  `POST` | Register the component sent in the `body` of this request   |
 | `/component`  |  `DELETE` | Deletes the component with the provided `:id`  |
+
+# Settings
+
+Several features of the service can be set up using arguments
+* `--port=` is used to change the default service port 4567
+* `--persistence=` is used to specify a different database (or change its location)
+* `--components=` is used to specify where the default components are read (default is file `default-components.json`)
+* `--default_builde=` is used to specify the default mapping builder used for compiling the mappings (default is `SIoTRx`)

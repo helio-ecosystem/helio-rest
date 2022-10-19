@@ -124,7 +124,7 @@ public class TranslationTaskController {
 		
 		result = f.get();
 		
-		f.cancel(true);
+		//f.cancel(true);
 		}catch(Exception e) {
 			throw new InternalServiceException(e.toString());
 		}
