@@ -35,10 +35,10 @@ Using java download the [latest released version](https://github.com/helio-ecosy
 | `/component`  |  `POST` | Register the component sent in the `body` of this request   |
 | `/component`  |  `DELETE` | Deletes the component with the provided `:id`  |
 
-# Settings
+# Settings
 
 Several features of the service can be set up using arguments
 * `--port=` is used to change the default service port 4567
 * `--persistence=` is used to specify a different database (or change its location)
 * `--components=` is used to specify where the default components are read (default is file `default-components.json`)
-* `--default_builde=` is used to specify the default mapping builder used for compiling the mappings (default is `SIoTRx`)
+* `--default_builder=` is used to specify the default mapping builder used for compiling the mappings (default is `SIoTRx`)
