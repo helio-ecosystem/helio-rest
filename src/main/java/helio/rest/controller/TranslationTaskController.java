@@ -60,10 +60,12 @@ public class TranslationTaskController {
 			task.setId(id);
 		}
 		
-		boolean existed = HelioTaskService.createUpdateTask(task);
+		boolean existed = false;
 		try {
 			task.asemble(true);
+			existed = HelioTaskService.createUpdateTask(task);
 		}catch(Exception e) {
+			
 			throw new InternalServiceException(e.toString());
 		}
 		

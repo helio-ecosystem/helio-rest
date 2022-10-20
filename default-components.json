@@ -32,6 +32,10 @@
     "source": "./components/helio-provider-mqtt-0.1.1.jar",
     "clazz": "helio.providers.MqttProvider",
     "type": "PROVIDER"
+  },{
+    "source": "./components/helio-action-json-cast-0.1.0.jar",
+    "clazz": "helio.actions.JsonCast",
+    "type": "ACTION"
   }
 
 
