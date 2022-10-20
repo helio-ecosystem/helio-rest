@@ -6,7 +6,7 @@ USAGE="$(basename "$0") [ -h ] [ -e env ]
       -e  environment [ dev (default), prod, ... ]"
 
 # Default configuration
-ENV=0.4.9
+ENV=latest
 REGISTRY=acimmino
 IMAGE_NAME=helio-rest
 PLATFORMS=linux/amd64,linux/arm64,linux/arm/v7
