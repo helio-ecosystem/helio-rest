@@ -51,7 +51,7 @@ public class HelioService {
 	public static void initTasks(){
 		HelioTaskService.listHelioTasks().stream().forEach(hTask -> {
 			try {
-				hTask.asemble();
+				hTask.asemble(true);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

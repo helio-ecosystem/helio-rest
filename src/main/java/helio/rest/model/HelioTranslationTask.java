@@ -50,9 +50,9 @@ public class HelioTranslationTask {
 
 	// -- Ancillary methods
 	@JsonIgnore
-	public void asemble() throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException,
+	public void asemble(boolean force) throws IncompatibleMappingException, IncorrectMappingException, ExtensionNotFoundException,
 			TranslationUnitExecutionException {
-		if (units.isEmpty()) {
+		if (units.isEmpty() || force) {
 			if (mappingContent != null && !mappingContent.isBlank() && mappingProcessor != null
 					&& !mappingProcessor.isBlank()) {
 				units = Components.newBuilderInstance(mappingProcessor).parseMapping(mappingContent);

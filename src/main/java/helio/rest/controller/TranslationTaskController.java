@@ -62,7 +62,7 @@ public class TranslationTaskController {
 		
 		boolean existed = HelioTaskService.createUpdateTask(task);
 		try {
-			task.asemble();
+			task.asemble(true);
 		}catch(Exception e) {
 			throw new InternalServiceException(e.toString());
 		}
@@ -99,7 +99,7 @@ public class TranslationTaskController {
 	public static final Route getTranslationData = (Request request, Response response) -> {
 		String id = fetchId(request);
 		HelioTranslationTask task = HelioTaskService.getTranslationTask(id);
-		task.asemble();
+		task.asemble(false);
 		Map<String, Object> params = Maps.newHashMap();
 		for(Entry<String,String[]> entries: request.queryMap().toMap().entrySet()) {
 			if(entries.getValue().length==1) {
