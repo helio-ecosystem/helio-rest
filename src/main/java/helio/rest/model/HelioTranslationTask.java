@@ -34,7 +34,7 @@ public class HelioTranslationTask {
 	private int threads;
 
 	@Transient @JsonIgnore
-	public static Set<TranslationUnit> units = new HashSet<>();
+	public Set<TranslationUnit> units = new HashSet<>();
 	
 	
 	/*
