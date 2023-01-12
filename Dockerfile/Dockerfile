@@ -16,6 +16,11 @@ COPY ./components/helio-builder-siot-0.1.10.jar      ./components/helio-builder-
 COPY ./components/helio-provider-mqtt-0.1.1.jar      ./components/helio-provider-mqtt-0.1.1.jar
 COPY ./components/helio-provider-mqtt-0.1.1.jar      ./components/helio-provider-mqtt-0.1.1.jar
 COPY ./components/helio-action-json-cast-0.1.0.jar   ./components/helio-action-json-cast-0.1.0.jar
+COPY ./components/helio-action-odrl-0.1.2.jar   ./components/helio-action-odrl-0.1.2.jar
+COPY ./components/helio-action-shacl-validator-0.1.0.jar  ./components/helio-action-shacl-validator-0.1.0.jar
+COPY ./components/helio-handler-xml-0.1.2.jar  ./components/helio-handler-xml-0.1.2.jar
+
+
 EXPOSE 4567
 
 CMD ["java", "-jar", "./helio-rest-api-0.4.9.jar"]

@@ -31,7 +31,7 @@ public class HelioComponent {
 
 	public HelioComponent(Component component) {
 		this.component = HelioService.toJson(component);
-		this.id = String.valueOf(this.component.hashCode()).replace('-', '0');
+		this.id = String.valueOf(component.getClazz()).replace('-', '0');
 	}
 
 	public String getId() {

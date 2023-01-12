@@ -36,7 +36,14 @@
     "source": "./components/helio-action-json-cast-0.1.0.jar",
     "clazz": "helio.actions.JsonCast",
     "type": "ACTION"
-  }
-
+  },{
+    "source": "./components/helio-action-odrl-0.1.2.jar",
+    "clazz": "helio.action.odrl.ODRL",
+    "type": "ACTION"
+  },{
+    "source": "./components/helio-action-shacl-validator-0.1.0.jar",
+    "clazz": "helio.action.shacl.validator.ShaclValidator",
+    "type": "ACTION"
+}
 
 ]
