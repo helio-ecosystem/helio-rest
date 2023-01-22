@@ -42,8 +42,7 @@ public class HelioComponentService {
 			Components.registerAndLoad(rawComponent);
 			repository.persist(component);
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ResourceNotPresentException(e.toString());
+			throw new ResourceNotPresentException(e.getMessage());
 		}
 		return rawComponent;
 	}

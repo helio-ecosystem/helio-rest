@@ -15,7 +15,7 @@ public class Exceptions {
 	public static final ExceptionHandler handleException = (Exception exception, Request request, Response response) -> {
 		response.status(500);
 		response.header(HTTP.CONTENT_TYPE, "application/json");
-		ApiError error = new ApiError(500, exception.toString());
+		ApiError error = new ApiError(500, exception.getMessage());
 		response.body(error.toString());
 	};
 
@@ -23,7 +23,7 @@ public class Exceptions {
 	public static final ExceptionHandler handleIllegalArgumentException = (Exception exception, Request request, Response response) -> {
 		response.status(400);
 		response.header(HTTP.CONTENT_TYPE, "application/json");
-		ApiError error = new ApiError(400, exception.toString());
+		ApiError error = new ApiError(400, exception.getMessage());
 		response.body(error.toString());
 	};
 }

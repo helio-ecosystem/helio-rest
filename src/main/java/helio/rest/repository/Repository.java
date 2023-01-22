@@ -39,7 +39,7 @@ public class Repository<T> {
             if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-            throw new InternalServiceException(e.toString());
+            throw new InternalServiceException(e.getMessage());
         }
 	}
 
@@ -53,7 +53,7 @@ public class Repository<T> {
 			return session.createQuery(this.queryExists, Long.class).setParameter(columnName, id).uniqueResult() > 0;
         } catch (Exception e) {
         	//e.printStackTrace();
-        	throw new InternalServiceException(e.toString());
+        	throw new InternalServiceException(e.getMessage());
         }
 	}
 	
@@ -62,7 +62,7 @@ public class Repository<T> {
 			session.beginTransaction();
 			return session.createQuery(this.queryRetrieve, innerClass).setParameter("id", id).uniqueResultOptional();
         } catch (Exception e) {
-        	throw new InternalServiceException(e.toString());
+        	throw new InternalServiceException(e.getMessage());
         }
 	}
 
@@ -71,7 +71,7 @@ public class Repository<T> {
 			session.beginTransaction();
 			return session.createQuery(queryList, innerClass).list();
         } catch (Exception e) {
-        	throw new InternalServiceException(e.toString());
+        	throw new InternalServiceException(e.getMessage());
         }
 	}
 
@@ -80,7 +80,7 @@ public class Repository<T> {
 			session.beginTransaction();
 			session.createQuery(queryDelete).setParameter("id", id).executeUpdate();
 		} catch (Exception e) {
-			throw new InternalServiceException(e.toString());
+			throw new InternalServiceException(e.getMessage());
         }
 	}
 	
@@ -89,7 +89,7 @@ public class Repository<T> {
 			session.beginTransaction();
 			session.createQuery(queryDelete).setParameter("id", id).executeUpdate();
 		} catch (Exception e) {
-			throw new InternalServiceException(e.toString());
+			throw new InternalServiceException(e.getMessage());
         }
 	}
 
@@ -110,7 +110,7 @@ public class Repository<T> {
 			query.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new InternalServiceException(e.toString());
+			throw new InternalServiceException(e.getMessage());
         }
 	}
 }

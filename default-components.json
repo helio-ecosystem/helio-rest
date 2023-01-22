@@ -4,6 +4,10 @@
     "clazz": "handlers.JsonHandler",
     "type": "HANDLER"
   },{
+    "source": "./components/helio-handler-xml-0.1.2.jar",
+    "clazz": "handlers.XmlHandler",
+    "type": "HANDLER"
+  },{
     "source": "./components/helio-provider-files-0.1.1.jar",
     "clazz": "helio.providers.files.FileProvider",
     "type": "PROVIDER"
@@ -41,9 +45,17 @@
     "clazz": "helio.action.odrl.ODRL",
     "type": "ACTION"
   },{
-    "source": "./components/helio-action-shacl-validator-0.1.0.jar",
+    "source": "./components/helio-action-shacl-validator-0.1.1.jar",
     "clazz": "helio.action.shacl.validator.ShaclValidator",
     "type": "ACTION"
-}
+  },{
+    "source": "./components/helio-action-sparql-engine-1.2.1.jar",
+    "clazz": "helio.action.sparql.query.SparqlEngine",
+    "type": "ACTION"
+  },{
+    "source": "./components/helio-action-rdf-cast-0.1.0.jar",
+    "clazz": "helio.action.rdf.cast.RdfCast",
+    "type": "ACTION"
+  }
 
 ]

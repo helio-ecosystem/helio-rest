@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.helio-ecosystem</groupId>
 	<artifactId>helio-rest-api</artifactId>
-	<version>0.4.10</version>
+	<version>0.4.11</version>
 	<name>Helio REST</name>
 
 	<properties>
@@ -46,6 +46,14 @@
 			<artifactId>sparql-streamline</artifactId>
 			<version>0.1.5</version>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.jena/jena-geosparql -->
+		<dependency>
+		    <groupId>org.apache.jena</groupId>
+		    <artifactId>jena-geosparql</artifactId>
+		    <version>4.7.0</version>
+		</dependency>
+				
 		
 	</dependencies>
 

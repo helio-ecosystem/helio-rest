@@ -115,7 +115,7 @@ public class TranslationTaskController {
 		try {
 			return task.getUnits().parallelStream().map(uniT -> runUnit(uniT, params)).collect(Collectors.joining());
 		}catch(Exception e) {
-			throw new InternalServiceException(e.toString());
+			throw new InternalServiceException(e.getMessage());
 		}
 	};
 	
