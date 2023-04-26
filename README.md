@@ -4,20 +4,15 @@
 
 Using docker run docker-compose with the following recipe
 ````yml
-version: '2'
+version: '3'
 services:
-  semanticadapter:
+  helio-publisher:
     image: acimmino/helio-rest:latest
     volumes: 
-      - type: volume
-        source: helio-db
-        target: /helio/app
-        volume: {}
+      - ./local/:/usr/src/app/local/
+      - ./db/:/usr/src/app/db/
     ports:
-      - '4567:4567'
-volumes:
-  helio-db:
-    name: helio-db
+      - "4567:4567"
 ````
 
 Using java download the [latest released version](https://github.com/helio-ecosystem/helio-rest/releases) and run the script `run.sh`
