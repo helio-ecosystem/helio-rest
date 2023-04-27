@@ -14,6 +14,7 @@ services:
     ports:
       - "4567:4567"
 ````
+It creates two folders, one with the database containing all the mappings and configuration so security copies can be made and, another, that is empty in case some local files are required for the mappings.
 
 Using java download the [latest released version](https://github.com/helio-ecosystem/helio-rest/releases) and run the script `run.sh`
 
